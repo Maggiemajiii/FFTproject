@@ -1,0 +1,87 @@
+\documentclass[11pt]{article}
+
+%%% Additional packages I am using to have more mathematical symbols and commands.
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[shortlabels]{enumitem}
+\usepackage{setspace}
+\usepackage[letterpaper, total={6.5in, 9in}]{geometry}
+
+\title{Project Outline: Fast Fourier Transform (FFT)\\ Solving the 1D/2D Poisson Equation with Periodic Boundary Conditions}
+\author{Caiwei Zhang, Yitong Wang}
+\date{\today}
+%%%
+\begin{document}
+\maketitle
+%%%
+\doublespacing
+\setlength{\parindent}{0pt}
+
+\section*{Goals}
+\begin{itemize}
+    \item Derive the mathematical steps to convert the Poisson equation into the frequency domain.
+    \item Implement a numerical solution using FFT in Julia for both the 1D and 2D cases.
+    \item Analyze the computational efficiency and accuracy of using FFT for solving the Poisson equation compared to other methods like Finite Difference Method.
+\end{itemize}
+
+\section*{Mathematical Outline}
+
+\subsection{Fourier Transform and FFT}
+
+The Discrete Fourier Transform (DFT) of a sequence \( \{x_n\} \) of \( N \) complex numbers is defined by
+\(
+Y(k) = \sum_{k=0}^{N-1} x_k w_n^{mk}, \ where \ w_n^{k} = e^{-i \frac{2\pi k}{N}}
+\), 
+for \( m = 0, 1, \dots, N-1 \), which represents the frequency index. 
+The inverse DFT is given by
+\(
+x_k = \frac{1}{N} \sum_{m=0}^{N-1} Y(m) w_n^{-mk},  k = 0,1, ..., N-1
+\).
+The FFT algorithm reduces the computational complexity of calculating the DFT from \( O(N^2) \) to \( O(N \log N) \)
+by using a divide and conquer approach to break down the DFT computation.
+
+\subsection{Solving the Poisson Equation in Frequency Space}
+For the 1D Poisson equation with periodic boundary conditions:
+\(
+\frac{d^2 u}{dx^2} = -f(x),
+\)
+we will start by expressing \( u(x) \) and \( f(x) \) in terms of their Fourier series:
+\(
+u(x) = \sum_{k} \hat{u}(k) e^{i k x}, \quad f(x) = \sum_{k} \hat{f}(k) e^{i k x},
+\)
+where \( \hat{u}(k) \) and \( \hat{f}(k) \) are the Fourier coefficients of \( u(x) \) and \( f(x) \), respectively.
+
+Taking the Fourier transform of both sides of the Poisson equation, we get
+\(
+-(k^2) \hat{u}(k) = \hat{f}(k).
+\)
+In the case where \( k = 0 \), we handle the zero-frequency component separately to ensure the solution's periodicity.
+
+For the 2D Poisson equation:
+\(
+\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = -f(x, y),
+\)
+the Fourier transform approach yields
+\(
+-(k_x^2 + k_y^2) \hat{u}(k_x, k_y) = \hat{f}(k_x, k_y),
+\)
+and thus,
+\(
+\hat{u}(k_x, k_y) = -\frac{\hat{f}(k_x, k_y)}{k_x^2 + k_y^2} \quad \text{for} \quad (k_x, k_y) \neq (0, 0).
+\)
+
+\section*{References}
+\begin{itemize}
+    \item Heath, M. T. \textit{Scientific Computing: An Introductory Survey}, Chapter 12 on FFT and its applications.
+    \item Julia FFT Documentation: References on using FFT for numerical simulations.
+    \item Bretherton, C. S. (n.d.). \textit{Fourier Series and the 2D Poisson Equation}. 
+    \item Fitzpatrick, R. (n.d.). \textit{Solution of Poisson's Equation}. 
+    \item Roberts, S. J. (n.d.). \textit{Signal Processing and the Fourier Transform}. 
+\end{itemize}
+
+
+\section*{Planned Submission}
+We plan to submit a written report that includes a mathematical background of FFT, derivation and implementation details for solving the Poisson equation, and results comparing computational efficiency. 
+Visualizations of the solutions for both 1D and 2D cases will be included to demonstrate the effectiveness of this method.
+
+\end{document}
